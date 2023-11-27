@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Axo by Jiwa: Sending and Receiving Emotional States</title> <!-- Updated title here -->
+    <title>Axo by Jiwa: Sending and Receiving Emotional States</title>
     <style>
         body {
             background-color: black;
@@ -15,15 +15,15 @@
 
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2x2 grid */
-            grid-gap: 1px;
-            padding: 3px;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 10px;
+            padding: 20px;
         }
 
         .iframe-container {
             position: relative;
             overflow: hidden;
-            padding-bottom: 50%; /* 4:3 aspect ratio, adjust as needed */
+            padding-bottom: 75%; /* 4:3 aspect ratio, adjust as needed */
         }
 
         iframe {
@@ -39,62 +39,42 @@
 <body>
     <h1 style="text-align: center; font-size: 24px;">Axo by Jiwa: Sending and Receiving Emotional States</h1>
     <div class="grid-container">
-        <!-- URL 1 -->
+        <!-- Frame 1 -->
         <div class="iframe-container">
-            <iframe src="https://hosted.ntent.art/projects/axo/index.html"></iframe>
+            <iframe id="frame1" src="https://hosted.ntent.art/projects/axo/index.html"></iframe>
         </div>
 
-        <!-- URL 2 -->
+        <!-- Frame 2 -->
         <div class="iframe-container">
-            <iframe src="https://hosted.ntent.art/projects/axo/index.html"></iframe>
+            <iframe id="frame2" src="https://hosted.ntent.art/projects/axo/index.html"></iframe>
         </div>
 
-        <!-- URL 3 -->
+        <!-- Frame 3 -->
         <div class="iframe-container">
-            <iframe src="https://hosted.ntent.art/projects/axo/index.html"></iframe>
+            <iframe id="frame3" src="https://hosted.ntent.art/projects/axo/index.html"></iframe>
         </div>
 
-        <!-- URL 4 -->
+        <!-- Frame 4 -->
         <div class="iframe-container">
-            <iframe src="https://hosted.ntent.art/projects/axo/index.html"></iframe>
+            <iframe id="frame4" src="https://hosted.ntent.art/projects/axo/index.html"></iframe>
         </div>
     </div>
+
+    <script>
+        // Handle messages from other iframes
+        window.addEventListener("message", (e) => {
+            if (typeof e.data === "object" && e.data.event === "axoStateChange") {
+                const frameId = e.data.frameId;
+                const action = e.data.action;
+                const value = e.data.value;
+
+                // Call the corresponding state change function in the iframe
+                const frame = document.getElementById(frameId);
+                if (frame) {
+                    frame.contentWindow.postMessage({ call: "axoStateChange", value: action }, "*");
+                }
+            }
+        }, false);
+    </script>
 </body>
 </html>
-// Frame 1 (URL1) JavaScript code
-window.addEventListener("message", (e) => {
-  // Handle state change messages from this frame
-  if (e.data.event === "stateChange") {
-    // Update the state of this frame
-    updateState(e.data.value);
-    
-    // Send a message to other frames to update their states
-    const otherFrames = [URL2, URL3, URL4]; // Replace with your URLs
-    otherFrames.forEach((frameUrl) => {
-      const otherFrame = document.querySelector(`iframe[src="${frameUrl}"]`);
-      if (otherFrame) {
-        otherFrame.contentWindow.postMessage({
-          event: "stateChange",
-          value: e.data.value,
-        }, "*");
-      }
-    });
-  }
-});
-
-function updateState(newState) {
-  // Implement logic to update the state of this frame based on newState
-  // You can use this function to update the content or appearance of frame 1
-// Frame 2 (URL2), Frame 3 (URL3), and Frame 4 (URL4) JavaScript code
-window.addEventListener("message", (e) => {
-  // Handle state change messages from frame 1 (URL1)
-  if (e.data.event === "stateChange") {
-    // Update the state of this frame based on the received newState
-    updateState(e.data.value);
-  }
-});
-
-function updateState(newState) {
-  // Implement logic to update the state of this frame based on newState
-  // You can use this function to update the content or appearance of these frames
-}
