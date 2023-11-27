@@ -64,15 +64,13 @@
         // Handle messages from other iframes
         window.addEventListener("message", (e) => {
             if (typeof e.data === "object" && e.data.event === "axoStateChange") {
-                const frameId = e.data.frameId;
-                const action = e.data.action;
-                const value = e.data.value;
+                const action = e.data.value;
 
-                // Call the corresponding state change function in the iframe
-                const frame = document.getElementById(frameId);
-                if (frame) {
-                    frame.contentWindow.postMessage({ call: "axoStateChange", value: action }, "*");
-                }
+                // Call the corresponding state change function in all iframes
+                const iframes = document.querySelectorAll("iframe");
+                iframes.forEach((iframe) => {
+                    iframe.contentWindow.postMessage({ call: "axoStateChange", value: action }, "*");
+                });
             }
         }, false);
     </script>
