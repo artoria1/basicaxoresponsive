@@ -15,7 +15,7 @@
 
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2x2 grid, adjust as needed */
+            grid-template-columns: repeat(2, 1fr); /* 2x2 grid */
             grid-gap: 10px;
             padding: 20px;
         }
@@ -39,46 +39,61 @@
 <body>
     <h1 style="text-align: center; font-size: 24px;">Axo by Jiwa: Sending and Receiving Emotional States</h1>
     <div class="grid-container">
-        <!-- Replace these URLs with your actual URLs -->
+        <!-- Include your iframes here -->
         <div class="iframe-container">
-            <iframe src="https://hosted.ntent.art/projects/axo/index.html" id="frame1"></iframe>
+            <iframe src="https://hosted.ntent.art/projects/axo/index.html"></iframe>
         </div>
-
         <div class="iframe-container">
-            <iframe src="https://hosted.ntent.art/projects/axo/index.html" id="frame2"></iframe>
+            <iframe src="https://hosted.ntent.art/projects/axo/index.html"></iframe>
         </div>
-
         <div class="iframe-container">
-            <iframe src="https://hosted.ntent.art/projects/axo/index.html" id="frame3"></iframe>
+            <iframe src="https://hosted.ntent.art/projects/axo/index.html"></iframe>
         </div>
-
         <div class="iframe-container">
-            <iframe src="https://hosted.ntent.art/projects/axo/index.html" id="frame4"></iframe>
+            <iframe src="https://hosted.ntent.art/projects/axo/index.html"></iframe>
         </div>
     </div>
 
     <script>
-        const frames = ["frame1", "frame2", "frame3", "frame4"];
+        // Add event listener to listen for keydown events in each iframe
+        window.addEventListener('keydown', function (event) {
+            // Check if the pressed key is 'F' or 'A'
+            if (event.key === 'F') {
+                // Handle 'F' key press (Freak out)
+                handleFreakOut();
+            } else if (event.key === 'A') {
+                // Handle 'A' key press (Awareness)
+                handleAwareness();
+            }
+        });
 
-        // Function to send a state change message to other frames
-        function sendStateChange(frameId, state) {
-            frames.forEach((frame) => {
-                if (frame !== frameId) {
-                    const iframe = document.getElementById(frame);
-                    iframe.contentWindow.postMessage({ event: "axoStateChange", value: state }, "*");
+        // Function to handle 'F' key press (Freak out)
+        function handleFreakOut() {
+            // Implement your 'Freak out' logic here for the current iframe
+            // This could involve changing the appearance or behavior of the iframe
+
+            // Send a message to other iframes to make them 'Freak out' too
+            postMessageToOtherIframes({ action: 'F' });
+        }
+
+        // Function to handle 'A' key press (Awareness)
+        function handleAwareness() {
+            // Implement your 'Awareness' logic here for the current iframe
+            // This could involve changing the appearance or behavior of the iframe
+
+            // Send a message to other iframes to make them 'Awareness' too
+            postMessageToOtherIframes({ action: 'A' });
+        }
+
+        // Function to send a message to other iframes
+        function postMessageToOtherIframes(message) {
+            const iframes = document.querySelectorAll('iframe');
+            iframes.forEach(iframe => {
+                if (iframe !== window.frameElement) {
+                    iframe.contentWindow.postMessage(message, '*');
                 }
             });
         }
-
-        // Listen for messages from iframes
-        window.addEventListener("message", (e) => {
-            if (typeof e.data === "object" && e.data.event === "axoStateChange") {
-                // When frame 1 changes its state, replicate it to other frames
-                if (e.source === document.getElementById("frame1").contentWindow) {
-                    sendStateChange("frame1", e.data.value);
-                }
-            }
-        });
     </script>
 </body>
 </html>
