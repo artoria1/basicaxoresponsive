@@ -15,15 +15,15 @@
 
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-gap: 1px;
-            padding: 2px;
+            grid-template-columns: repeat(2, 1fr); /* 2x2 grid, adjust as needed */
+            grid-gap: 10px;
+            padding: 20px;
         }
 
         .iframe-container {
             position: relative;
             overflow: hidden;
-            padding-bottom: 50%; /* 4:3 aspect ratio, adjust as needed */
+            padding-bottom: 75%; /* 4:3 aspect ratio, adjust as needed */
         }
 
         iframe {
@@ -39,40 +39,46 @@
 <body>
     <h1 style="text-align: center; font-size: 24px;">Axo by Jiwa: Sending and Receiving Emotional States</h1>
     <div class="grid-container">
-        <!-- Frame 1 -->
+        <!-- Replace these URLs with your actual URLs -->
         <div class="iframe-container">
-            <iframe id="frame1" src="https://hosted.ntent.art/projects/axo/index.html"></iframe>
+            <iframe src="https://hosted.ntent.art/projects/axo/index.html" id="frame1"></iframe>
         </div>
 
-        <!-- Frame 2 -->
         <div class="iframe-container">
-            <iframe id="frame2" src="https://hosted.ntent.art/projects/axo/index.html"></iframe>
+            <iframe src="https://hosted.ntent.art/projects/axo/index.html" id="frame2"></iframe>
         </div>
 
-        <!-- Frame 3 -->
         <div class="iframe-container">
-            <iframe id="frame3" src="https://hosted.ntent.art/projects/axo/index.html"></iframe>
+            <iframe src="https://hosted.ntent.art/projects/axo/index.html" id="frame3"></iframe>
         </div>
 
-        <!-- Frame 4 -->
         <div class="iframe-container">
-            <iframe id="frame4" src="https://hosted.ntent.art/projects/axo/index.html"></iframe>
+            <iframe src="https://hosted.ntent.art/projects/axo/index.html" id="frame4"></iframe>
         </div>
     </div>
 
     <script>
-        // Handle messages from other iframes
+        const frames = ["frame1", "frame2", "frame3", "frame4"];
+
+        // Function to send a state change message to other frames
+        function sendStateChange(frameId, state) {
+            frames.forEach((frame) => {
+                if (frame !== frameId) {
+                    const iframe = document.getElementById(frame);
+                    iframe.contentWindow.postMessage({ event: "axoStateChange", value: state }, "*");
+                }
+            });
+        }
+
+        // Listen for messages from iframes
         window.addEventListener("message", (e) => {
             if (typeof e.data === "object" && e.data.event === "axoStateChange") {
-                const action = e.data.value;
-
-                // Call the corresponding state change function in all iframes
-                const iframes = document.querySelectorAll("iframe");
-                iframes.forEach((iframe) => {
-                    iframe.contentWindow.postMessage({ call: "axoStateChange", value: action }, "*");
-                });
+                // When frame 1 changes its state, replicate it to other frames
+                if (e.source === document.getElementById("frame1").contentWindow) {
+                    sendStateChange("frame1", e.data.value);
+                }
             }
-        }, false);
+        });
     </script>
 </body>
 </html>
